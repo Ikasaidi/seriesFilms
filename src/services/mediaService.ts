@@ -38,7 +38,7 @@ export function getMediaById(id: string): Media | null {
     
 }
 
-//add a media
+//add a media require Admin
 export function addMedia(media: Media): Media | null {
     const bd = readBD();
     const exist = (bd.medias as Media[]).find(m => m.id === media.id) ;
@@ -53,7 +53,7 @@ export function addMedia(media: Media): Media | null {
     return media;
 }
 
-//update a media
+//update a media require Admin
 export function updateMedia(id: string, updatedMedia: Partial<Media>): Media | null {
     const bd = readBD();
     const media = (bd.medias as Media[]).find(m => m.id === id);
@@ -72,7 +72,7 @@ export function updateMedia(id: string, updatedMedia: Partial<Media>): Media | n
     return media;
 }
 
-//delete a media
+//delete a media require Admin
 export function deleteMedia(id: string): Media | null {
     const bd = readBD();
     const index = (bd.medias as Media[]).findIndex(m => m.id === id);
