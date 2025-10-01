@@ -1,7 +1,7 @@
 import { Film } from "../models/Film";
 import { Media } from "../models/Media";
 import { logger } from "../utils/logger";
-import { DataService, DBShape } from "./DataService";
+import { DataService, DBShape } from "./dataService";
 
 export class FilmService {
   private dataService = new DataService();

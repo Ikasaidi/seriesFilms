@@ -1,5 +1,5 @@
 import { logger } from "../utils/logger";
-import { DataService, DBShape } from "./DataService";
+import { DataService, DBShape } from "./dataService";
 
 export class EpisodeService {
   private data = new DataService();
@@ -9,22 +9,35 @@ export class EpisodeService {
     try {
       const bd = await this.data.readBD();
 
-      const serie = (bd.medias as any[]).find(m => m.id === serieId);
+      // On cherche la série correspondante à l'id
+      const serie = (bd.medias as any[]).find((m) => m.id === serieId);
       if (!serie) {
         logger.warn("Série introuvable", { serieId });
         return null;
       }
 
-      const saison = (serie.saisons ?? []).find((s: any) => Number(s.seasonNumber) === Number(seasonNumber));
+      // On cherche la saison correspondante au numéro
+      const saison = (serie.saisons ?? []).find(
+        (s: any) => Number(s.seasonNumber) === Number(seasonNumber)
+      );
       if (!saison) {
         logger.warn("Saison introuvable", { serieId, seasonNumber });
         return null;
       }
 
+      // On s'assure que la propriété episodes est bien un tableau
+
       saison.episodes = Array.isArray(saison.episodes) ? saison.episodes : [];
+
+      // On vérifie si l'épisode existe déjà dans la saison
+
       const exists = saison.episodes.find((e: any) => e.id === String(info.id));
       if (exists) {
-        logger.warn("Épisode existe déjà", { serieId, seasonNumber, episodeId: info.id });
+        logger.warn("Épisode existe déjà", {
+          serieId,
+          seasonNumber,
+          episodeId: info.id,
+        });
         return null;
       }
 
@@ -36,13 +49,22 @@ export class EpisodeService {
         duration: info.duration !== undefined ? Number(info.duration) : 0,
       };
 
+      // Push et sauvegarde
       saison.episodes.push(episode);
       await this.data.writeBD(bd as DBShape);
 
-      logger.info("Épisode ajouté", { serieId, seasonNumber, episodeId: episode.id });
+      logger.info("Épisode ajouté", {
+        serieId,
+        seasonNumber,
+        episodeId: episode.id,
+      });
       return episode;
     } catch (error: any) {
-      logger.error("Erreur addEpisode", { serieId, seasonNumber, error: error.message });
+      logger.error("Erreur addEpisode", {
+        serieId,
+        seasonNumber,
+        error: error.message,
+      });
       return null;
     }
   }
@@ -60,6 +82,8 @@ export class EpisodeService {
           const episodes = s?.episodes ?? [];
           const ep = episodes.find((e: any) => e.id === episodeId);
           if (ep) {
+            
+            // On met à jour le statut "watched"
             ep.watched = Boolean(watched);
             await this.data.writeBD(bd as DBShape);
             logger.info("Épisode marqué (watched)", { episodeId, watched });
@@ -71,7 +95,7 @@ export class EpisodeService {
       logger.warn("Épisode introuvable", { episodeId });
       return null;
     } catch (error: any) {
-      logger.error("Erreur markWatched", {  error: error.message });
+      logger.error("Erreur markWatched", { error: error.message });
       return null;
     }
   }

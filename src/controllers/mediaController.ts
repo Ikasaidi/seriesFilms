@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { MediaService, MediaFilters } from "../services/mediaService";
 
 const mediaService = new MediaService();
