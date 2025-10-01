@@ -5,11 +5,10 @@ import { UserRole } from "../models/User";
 export function authorizeRole(role: UserRole) {
     return (req: Request & {user?: any}, res: Response, next: NextFunction) => {
         
-        if (!req.user) {
-            return res.status(401).json({ error: "Non authentifié" });
-        }
+        //le mettre sur le header pour postman
+        const headerRole = String(req.headers["x-role"] || "").toLowerCase();
 
-        if (req.user.role !== role) {
+        if (headerRole !== role) {
             return res.status(403).json({ error: "Accès refusé" });
         }
         next();

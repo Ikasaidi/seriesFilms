@@ -1,1 +1,93 @@
-{}
+{
+  "medias": [
+    {
+      "id": "f1",
+      "titre": "Inception",
+      "genre": "Sci-Fi",
+      "year": 2010,
+      "rating": 9,
+      "duration": 148,
+      "watched": false
+    },
+    {
+      "id": "s1",
+      "titre": "Dark",
+      "genre": "Mystery",
+      "year": 2017,
+      "rating": 9,
+      "status": "En cours",
+      "saisons": [
+        {
+          "seasonNumber": 1,
+          "releaseDate": "2017-01-01T00:00:00.000Z",
+          "episodes": [
+            {
+              "id": "e1",
+              "titre": "Genesis",
+              "episodeNumber": 1,
+              "duration": 52,
+              "watched": true
+            }
+          ]
+        },
+        {
+          "seasonNumber": 2,
+          "releaseDate": "2017-01-01T05:00:00.000Z",
+          "episodes": [
+            {
+              "id": "t1",
+              "titre": "debutt",
+              "episodeNumber": 1,
+              "watched": false,
+              "duration": 55
+            },
+            {
+              "id": "g1",
+              "titre": "debutt2",
+              "episodeNumber": 2,
+              "watched": false,
+              "duration": 34
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "t1",
+      "titre": "Titanic",
+      "genre": "Drama",
+      "year": 1997,
+      "rating": 7.9,
+      "duration": 148,
+      "watched": true
+    },
+    {
+      "id": "g1",
+      "titre": "tete",
+      "genre": "Mystery",
+      "year": 2000,
+      "rating": 9,
+      "status": "En cours",
+      "saisons": []
+    }
+  ],
+  "users": [
+    {
+      "id": "u1",
+      "name": "Alice",
+      "role": "admin",
+      "favorites": [
+        "f1",
+        "s1"
+      ]
+    },
+    {
+      "id": "u2",
+      "name": "Bob",
+      "role": "user",
+      "favorites": [
+        "s1"
+      ]
+    }
+  ]
+}

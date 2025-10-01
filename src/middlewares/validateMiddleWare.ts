@@ -1,69 +1,146 @@
 import { Request, Response, NextFunction } from "express";
-import { reTitre, reDuration, currentYear, reStatut, normalizeStatus } from "../utils/validators";
-import { logger } from "../utils/logger";
+import { regexId, regexTitre, regexYear, regexRating } from "../utils/validators";
+
+//version plus simple et ya pas type 
 
 export function validateMediaBody(req: Request, res: Response, next: NextFunction) {
-    const body = req.body ?? {};
+  const { id, titre, year, rating } = req.body;
 
-    
-    if (!body.titre) {
-        logger.error("Validation échouée: titre manquant", { body });
-        return res.status(400).json({ error: "Le champ title/titre est requis" });
-    }
+  
+  if (typeof id !== "string" || id.trim() === "" || !regexId.test(id)) {
+    return res.status(400).json({ error: "id invalide" });
+  }
 
-    const titre = String(body.titre).trim();
-    if (!reTitre.test(titre)) {
-        logger.error("Titre invalide", { titre });
-        return res.status(400).json({ error: "Titre invalide. Il doit contenir au moins 1 caractère." });
-    }
+  if (typeof titre !== "string" || titre.trim() === "") {
+    return res.status(400).json({ error: "title est requis" });
+  }
 
-    const year = Number(body.year);
-    if (!Number.isInteger(year)  || year > currentYear()) {
-        logger.error("Année invalide", { year });
-        return res.status(400).json({ error: "Année invalide. Elle doit être un entier et ne pas dépasser l'année en cours." });
-    }
+  if (!regexTitre.test(titre)) {
+    return res.status(400).json({ error: "titre invalide" });
+  }
 
-    if (typeof body.genre !== "string" || !body.genre.trim()) {
-        logger.error("Genre invalide", { genre: body.genre });
-        return res.status(400).json({ error: "Genre invalide. Il doit être une chaîne de caractères non vide." });
-    }
+  if (year === undefined || year === null || !regexYear.test(String(year))) {
+    return res.status(400).json({ error: "année invalide (format attendu: 4 chiffres)" });
+  }
+  const currentYear = new Date().getFullYear();
+  if (Number(year) > currentYear) {
+    return res.status(400).json({ error: `année invalide (doit être ≤ ${currentYear})` });
+  }
 
-    const rating = Number(body.rating);
-    if (!Number.isFinite(rating) || rating < 0 || rating > 10) {
-        logger.error("Note invalide", { rating });
-        return res.status(400).json({ error: "Note invalide. Elle doit être un nombre entre 0 et 10." });
-    }
+  
+  if (rating === undefined || rating === null || !regexRating.test(String(rating))) {
+    return res.status(400).json({ error: "rating invalide (0 à 10)" });
+  }
 
-    let type = String(body.type ?? "").toLowerCase();
-    //déduire le type si non fourni
-    if (!type) {
-        if (body.duration !== undefined) type = "film";
-        else if (body.status !== undefined) type = "serie";   
-    }
-    if (type !== "film" && type !== "serie") {
-        logger.error("Type invalide", { type });
-        return res.status(400).json({ error: "Type invalide. Il doit être 'film' ou 'serie'." });
-    }
-
-    if (type === "film") {
-        const durationst = String(body.duration ?? "").trim();
-        if (!reDuration.test(durationst)) {
-            logger.error("Durée invalide", { duration : body.duration });
-            return res.status(400).json({ error: "Durée invalide. Elle doit être au format 'HH:MM'." });
-        }
-
-        req.body = { ...body, type, titre, year, rating, duration: durationst };
-    }
-
-    else  {
-        const status = normalizeStatus(body.status);
-        if (!reStatut.test(status)) {
-            logger.error("Statut invalide", { statusOriginal: body.status, statusNormalise: status });
-            return res.status(400).json({ error: "Statut invalide. Il doit être 'en cours' ou 'terminée'." });
-        }
-
-        req.body = { ...body, type, titre, year, rating, status };
-    }
-    
-    next();
+  next();
 }
+
+export function validateFilmBody(req: Request, res: Response, next: NextFunction) {
+
+  //prendre la méthode valideMediaBody  mais juste rajouter duration
+  validateMediaBody(req, res, (error?: any) => {
+    if (error) {
+      return next(error); // Si une erreur a été envoyée, on arrête 
+    }
+  
+
+  const { duration } = req.body;
+  const dura = Number(duration);
+
+  if (!Number.isFinite(dura) || dura <= 0) {
+    return res.status(400).json({ error: "duration invalide (doit être un nombre positif)" });
+  }
+
+  next();
+});
+}
+
+export function validateSerieBody(req: Request, res: Response, next: NextFunction) {
+  validateMediaBody(req, res, (error?: any) => {
+    if (error) {
+      return next(error); 
+    }
+
+    const { saison, episodes } = req.body;
+
+    
+    const sai = Number(saison);
+    if (!Number.isInteger(sai) || sai < 1) {
+      return res.status(400).json({ error: "saison invalide (entier positif requis)" });
+    }
+
+   
+    const ep = Number(episodes);
+    if (!Number.isInteger(ep) || ep < 1) {
+      return res.status(400).json({ error: "episodes invalide (entier positif requis)" });
+    }
+
+
+    next();
+  });
+}
+
+export function validateSaisonBody(req: Request, res: Response, next: NextFunction) {
+  const { serieId, seasonNumber, releaseYear } = req.body;
+
+  if (!serieId || typeof serieId !== "string") {
+    return res.status(400).json({ error: "serieId invalide" });
+  }
+
+  const sNum = Number(seasonNumber);
+  if (!Number.isInteger(sNum) || sNum < 1) {
+    return res.status(400).json({ error: "seasonNumber invalide (entier positif)" });
+  }
+
+  const rYear = Number(releaseYear);
+  const current = new Date().getFullYear();
+  if (!Number.isInteger(rYear) || String(rYear).length !== 4 || rYear > current) {
+    return res.status(400).json({ error: `releaseYear invalide (YYYY ≤ ${current})` });
+  }
+
+  next();
+}
+
+export function validateEpisodeWatched(req: Request, res: Response, next: NextFunction) {
+  const { watched } = req.body;
+  if (typeof watched !== "boolean") {
+    return res.status(400).json({ error: "watched doit être un booléen" });
+  }
+  next();
+}
+
+export function validateEpisodeBody(req: Request, res: Response, next: NextFunction) {
+  const { serieId, seasonNumber, id, titre, episodeNumber, duration } = req.body;
+
+  if (!serieId || typeof serieId !== "string") {
+    return res.status(400).json({ error: "serieId invalide" });
+  }
+
+  if (!regexId.test(String(id))) {
+    return res.status(400).json({ error: "id invalide" });
+  }
+
+  if (!regexTitre.test(String(titre))) {
+    return res.status(400).json({ error: "titre invalide" });
+  }
+
+  const sNum = Number(seasonNumber);
+  if (!Number.isInteger(sNum) || sNum < 1) {
+    return res.status(400).json({ error: "seasonNumber invalide (entier positif)" });
+  }
+
+  const eNum = Number(episodeNumber);
+  if (!Number.isInteger(eNum) || eNum < 1) {
+    return res.status(400).json({ error: "episodeNumber invalide (entier positif)" });
+  }
+
+  if (duration !== undefined) {
+    const dura = Number(duration);
+    if (!Number.isFinite(dura) || dura < 0) {
+      return res.status(400).json({ error: "duration invalide (nombre positif requis)" });
+    }
+  }
+
+  next();
+}
+

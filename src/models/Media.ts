@@ -1,4 +1,5 @@
 export abstract class Media {
+    
     constructor(
         public id: string,
         public titre: string,

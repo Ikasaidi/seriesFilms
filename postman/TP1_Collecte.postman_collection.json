@@ -1,0 +1,492 @@
+{
+	"info": {
+		"_postman_id": "f529d6eb-a3f7-458e-8394-f82f3ca1b846",
+		"name": "TP1_Collecte",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44258102",
+		"_collection_link": "https://ikram-8661560.postman.co/workspace/Ikram's-Workspace~e82d78ca-626b-4c8d-80bd-d81d3ef19912/collection/44258102-f529d6eb-a3f7-458e-8394-f82f3ca1b846?action=share&source=collection_link&creator=44258102"
+	},
+	"item": [
+		{
+			"name": "Medias",
+			"item": [
+				{
+					"name": "api/medias",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}api/medias",
+							"host": [
+								"{{URL}}api"
+							],
+							"path": [
+								"medias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/medias/:id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}api/medias/f1",
+							"host": [
+								"{{URL}}api"
+							],
+							"path": [
+								"medias",
+								"f1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/medias?genre=Mystery&year=2017",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}api/medias?genre=Mystery&year=2017",
+							"host": [
+								"{{URL}}api"
+							],
+							"path": [
+								"medias"
+							],
+							"query": [
+								{
+									"key": "genre",
+									"value": "Mystery"
+								},
+								{
+									"key": "year",
+									"value": "2017"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/media",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-role",
+								"value": "admin",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"m100\",\r\n  \"titre\": \"Interstellar\",\r\n  \"genre\": \"Sci-Fi\",\r\n  \"year\": 2014,\r\n  \"rating\": 9\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}api/medias",
+							"host": [
+								"{{URL}}api"
+							],
+							"path": [
+								"medias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/media/id",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-role",
+								"value": "admin",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"titre\": \"Interstellar (Director's Cut)\",\r\n  \"genre\": \"Sci-Fi\",\r\n  \"year\": 2014,\r\n  \"rating\": 9.5\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}api/medias/m100",
+							"host": [
+								"{{URL}}api"
+							],
+							"path": [
+								"medias",
+								"m100"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/media",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-role",
+								"value": "admin",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n"
+						},
+						"url": {
+							"raw": "{{URL}}api/medias/m100",
+							"host": [
+								"{{URL}}api"
+							],
+							"path": [
+								"medias",
+								"m100"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Films",
+			"item": [
+				{
+					"name": "api/films",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"id\":\"t1\",\"titre\":\"Titanic\",\"genre\":\"Drama\",\"year\":1997,\"rating\":7.9,\"duration\":148,\"watched\":true }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}api/films",
+							"host": [
+								"{{URL}}api"
+							],
+							"path": [
+								"films"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "titre manquant",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"f2\",\r\n  \"genre\": \"Action\",\r\n  \"year\": 2012,\r\n  \"rating\": 8.0,\r\n  \"duration\": 120,\r\n  \"watched\": false\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}api/films",
+							"host": [
+								"{{URL}}api"
+							],
+							"path": [
+								"films"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "titre invalide",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"f101\",\r\n  \"titre\": \"###123###\",\r\n  \"genre\": \"Comedy\",\r\n  \"year\": 2015,\r\n  \"rating\": 6.3,\r\n  \"duration\": 90,\r\n  \"watched\": true\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}api/films",
+							"host": [
+								"{{URL}}api"
+							],
+							"path": [
+								"films"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "anneFuture",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"f102\",\r\n  \"titre\": \"FilmDuFutur\",\r\n  \"genre\": \"Sci-Fi\",\r\n  \"year\": 2099,\r\n  \"rating\": 9.0,\r\n  \"duration\": 140,\r\n  \"watched\": false\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}api/films",
+							"host": [
+								"{{URL}}api"
+							],
+							"path": [
+								"films"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Serie",
+			"item": [
+				{
+					"name": "api/series",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"id\":\"g1\",\"titre\":\"tete\",\"genre\":\"Mystery\",\"year\":2000,\"rating\":9,\"status\":\"En cours\" }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}api/series",
+							"host": [
+								"{{URL}}api"
+							],
+							"path": [
+								"series"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/series/s1/episodes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}api/series/s1/episodes",
+							"host": [
+								"{{URL}}api"
+							],
+							"path": [
+								"series",
+								"s1",
+								"episodes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Saison",
+			"item": [
+				{
+					"name": "/api/seasons",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"serieId\":\"s1\",\"seasonNumber\":2,\"releaseYear\":2017 }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}api/saisons",
+							"host": [
+								"{{URL}}api"
+							],
+							"path": [
+								"saisons"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Épisode",
+			"item": [
+				{
+					"name": "api/episodes",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"serieId\":\"s1\",\"seasonNumber\":2,\"id\":\"g1\",\"titre\":\"debutt2\",\"episodeNumber\":2,\"duration\":34 }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}api/episodes",
+							"host": [
+								"{{URL}}api"
+							],
+							"path": [
+								"episodes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/episode/id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"watched\": true }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}api/episodes/e1",
+							"host": [
+								"{{URL}}api"
+							],
+							"path": [
+								"episodes",
+								"e1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": []
+		},
+		{
+			"name": "logs",
+			"item": [
+				{
+					"name": "api/logs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}api/logs",
+							"host": [
+								"{{URL}}api"
+							],
+							"path": [
+								"logs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/api/users/:id/medias",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}api/users/u1/medias",
+					"host": [
+						"{{URL}}api"
+					],
+					"path": [
+						"users",
+						"u1",
+						"medias"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": ""
+		}
+	]
+}

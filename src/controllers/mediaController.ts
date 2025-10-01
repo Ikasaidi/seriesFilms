@@ -1,92 +1,63 @@
 import { NextFunction, Request, Response } from "express";
-import { 
-    listMedias, getMediaById, addMedia, updateMedia, deleteMedia
- } from "../services/mediaService";
+import { MediaService, MediaFilters } from "../services/mediaService";
 
+const mediaService = new MediaService();
 
+export class MediaController {
+  //GET api/medias  , GET api/medias?type=serie&genre=drama&year=2020
+  public async getListMedias(req: Request, res: Response): Promise<void> {
+    const { genre, year } = req.query;
+    const filters: MediaFilters = {};
 
-//GET api/medias  , GET api/medias?type=serie&genre=drama&year=2020
-export function getListMedias(req: Request, res: Response, next: NextFunction) {
-    try {
-    const { type, genre, year } = req.query;
-    const filters: { type?: string; genre?: string; year?: number } = {};
-
-    if (type) filters.type = String(type);
     if (genre) filters.genre = String(genre);
     if (year) filters.year = Number(year);
 
-    const items = listMedias(filters);
-    res.json(items); 
-    } catch (error) {
-        next(error);
-    }
+    const items = await mediaService.listMedias(filters);
+    res.json(items);
+  }
 
-}
-
-// GET api/medias/:id
-export function getTheMediaById(req: Request, res: Response, next: NextFunction) {
-    try {
-    const id = req.params.id;
-    if (!id) {
-        return res.status(400).json({ error: "Manque media ID *" });
-    }
-
-    const media = getMediaById(id);
+  // GET api/medias/:id
+  public async getTheMediaById(req: Request, res: Response): Promise<void> {
+    const id = String(req.params.id);
+    const media = await mediaService.getMediaById(id);
     if (!media) {
-        return res.status(404).json({ error: "Media pas trouve" });
+      res.status(404).json({ error: "Media pas trouve" });
+      return;
     }
-
     res.json(media);
-    } catch (error) {
-        next(error);
-    }
-}
+  }
 
-// POST api/medias  (require Admin)
-export function createMedia(req: Request, res: Response, next: NextFunction) {
-    try {
-        const newMedia = addMedia(req.body);
-        if (!newMedia) {
-            return res.status(409).json({ error: "Media deja existe" });
-        }
-        res.status(201).json(newMedia);
-    } catch (error) {
-        next(error);
+  // POST api/medias  (require Admin)
+  public async createMedia(req: Request, res: Response): Promise<void> {
+    const newMedia = await mediaService.addMedia(req.body);
+    if (!newMedia) {
+      res.status(409).json({ error: "Media deja existe" });
+      return;
     }
+    res.status(201).json(newMedia);
+  }
 
-    
-     }
-
-// PUT api/medias/:id  (require Admin)
-export function putMedia(req: Request, res: Response, next: NextFunction) {
-    try {
-    const id = req.params.id;
-    if (!id) {
-        return res.status(400).json({ error: "Manque media ID *" });
-    }
-    const update = updateMedia(id, req.body);
+  // PUT api/medias/:id  (require Admin)
+  public async putMedia(req: Request, res: Response): Promise<void> {
+    const id = String(req.params.id);
+    const update = await mediaService.updateMedia(id, req.body);
     if (!update) {
-        return res.status(404).json({ error: "Media pas trouve" });
+      res.status(404).json({ error: "Media pas trouvé" });
+      return;
     }
-    res.json(update);
-    } catch (error) {
-        next(error);
-    }
-}
 
-// DELETE api/medias/:id  (require Admin)
-export function removeMedia(req: Request, res: Response, next: NextFunction) {
-    try {
-    const id = req.params.id;
-    if (!id) {
-        return res.status(400).json({ error: "Manque media ID *" });
-    }
-    const deleted = deleteMedia(id);
+    res.json(update);
+  }
+
+  // DELETE api/medias/:id  (require Admin)
+  public async removeMedia(req: Request, res: Response): Promise<void> {
+    const id = String(req.params.id);
+
+    const deleted = await mediaService.deleteMedia(id);
     if (!deleted) {
-        return res.status(404).json({ error: "Media pas trouve" });
+      res.status(404).json({ error: "Media pas trouve" });
+      return;
     }
     res.json(deleted);
-    } catch (error) {
-        next(error);
-    }
+  }
 }
