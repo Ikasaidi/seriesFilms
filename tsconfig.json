@@ -9,12 +9,16 @@
     // See also https://aka.ms/tsconfig/module
     "module": "commonjs",
     "target": "es2023",
+    // "module": "ESNext",
+    // "target": "ES2020",
+
     "types": [],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
     // and npm install -D @types/node
     "esModuleInterop": true,
+    "moduleResolution": "node",
 
     // Other Outputs
     "sourceMap": true,

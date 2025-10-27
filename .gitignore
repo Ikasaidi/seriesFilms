@@ -13,6 +13,20 @@ yarn-error.log*
 
 # Environnement local
 .env
+.env.*
+
+
+# config (module "config") – garder default.json etc. mais ignorer les overrides locaux/sensibles
+config/
+
+
+# Certificats / clés locales
+cert/*.key
+cert/*.csr
+cert/*.crt
+
+# Postman export
+postman/
 
 # Cache et données temporaires
 *.tsbuildinfo

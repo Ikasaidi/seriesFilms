@@ -1,0 +1,960 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "420-514-TP1 API v2",
+    "version": "2.0.0",
+    "description": "Documentation OpenAPI pour l’API Films & Séries."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v2",
+      "description": "Local HTTP"
+    },
+    {
+      "url": "https://localhost:3443/api/v2",
+      "description": "Local HTTPS"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth"
+    },
+    {
+      "name": "Users"
+    },
+    {
+      "name": "Movies"
+    },
+    {
+      "name": "Series"
+    },
+    {
+      "name": "Seasons"
+    },
+    {
+      "name": "Episodes"
+    },
+    {
+      "name": "Ratings"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "UserPublic": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "username": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "admin"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "username",
+          "role"
+        ]
+      },
+      "RegisterBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "name": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "name",
+          "username",
+          "password"
+        ]
+      },
+      "LoginBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "token": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserPublic"
+          }
+        }
+      },
+      "Movie": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "genres": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "synopsis": {
+            "type": "string"
+          },
+          "releaseDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "durationMin": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "title",
+          "genres",
+          "durationMin"
+        ]
+      },
+      "Series": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "genres": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "on-going",
+              "ended"
+            ]
+          }
+        },
+        "required": [
+          "title",
+          "genres",
+          "status"
+        ]
+      },
+      "Season": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "seriesId": {
+            "type": "string"
+          },
+          "seasonNo": {
+            "type": "integer"
+          },
+          "episodes": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "seriesId",
+          "seasonNo"
+        ]
+      },
+      "Episode": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "seriesId": {
+            "type": "string"
+          },
+          "seasonId": {
+            "type": "string"
+          },
+          "epNo": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "durationMin": {
+            "type": "integer"
+          },
+          "releaseDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "seriesId",
+          "seasonId",
+          "epNo",
+          "title",
+          "durationMin"
+        ]
+      },
+      "Rating": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number"
+          },
+          "review": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "target",
+          "targetId",
+          "score"
+        ]
+      },
+      "PagedMovies": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer"
+          },
+          "page": {
+            "type": "integer"
+          },
+          "pages": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Movie"
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Créer un compte",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "201": {
+            "description": "Créé"
+          },
+          "409": {
+            "description": "Conflit"
+          },
+          "422": {
+            "description": "Validation"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Se connecter",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid creds"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/{id}/promote": {
+      "patch": {
+        "summary": "Promouvoir en admin",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Non authentifié"
+          },
+          "403": {
+            "description": "Interdit"
+          },
+          "404": {
+            "description": "Introuvable"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/users/me": {
+      "get": {
+        "summary": "Mon profil",
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Non authentifié"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Modifier mon profil",
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "summary": "Voir un utilisateur (admin)",
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Interdit"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/movies": {
+      "get": {
+        "summary": "Lister les films",
+        "tags": [
+          "Movies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedMovies"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "title",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "genre",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "minYear",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "maxDur",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      },
+      "post": {
+        "summary": "Créer un film (admin)",
+        "tags": [
+          "Movies"
+        ],
+        "responses": {
+          "201": {
+            "description": "Créé"
+          },
+          "422": {
+            "description": "Validation"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Movie"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies/{id}": {
+      "get": {
+        "summary": "Détails d’un film",
+        "tags": [
+          "Movies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Introuvable"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Modifier un film (admin)",
+        "tags": [
+          "Movies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Movie"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Supprimer un film (admin)",
+        "tags": [
+          "Movies"
+        ],
+        "responses": {
+          "204": {
+            "description": "Supprimé"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/series": {
+      "get": {
+        "summary": "Lister les séries",
+        "tags": [
+          "Series"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer une série (admin)",
+        "tags": [
+          "Series"
+        ],
+        "responses": {
+          "201": {
+            "description": "Créé"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Series"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/series/{id}": {
+      "get": {
+        "summary": "Détails d’une série (+saisons)",
+        "tags": [
+          "Series"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Introuvable"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/series/{seriesId}/seasons": {
+      "get": {
+        "summary": "Lister saisons d’une série",
+        "tags": [
+          "Seasons"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "seriesId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "post": {
+        "summary": "Créer une saison (admin)",
+        "tags": [
+          "Seasons"
+        ],
+        "responses": {
+          "201": {
+            "description": "Créé"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Season"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "seriesId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/series/{seriesId}/seasons/{seasonId}/episodes": {
+      "get": {
+        "summary": "Lister épisodes d’une saison",
+        "tags": [
+          "Episodes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "seriesId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "seasonId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "minDuration",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      },
+      "post": {
+        "summary": "Créer un épisode (admin)",
+        "tags": [
+          "Episodes"
+        ],
+        "responses": {
+          "201": {
+            "description": "Créé"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Episode"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "seriesId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "seasonId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/ratings": {
+      "post": {
+        "summary": "Créer un rating",
+        "tags": [
+          "Ratings"
+        ],
+        "responses": {
+          "201": {
+            "description": "Créé"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Rating"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ratings/movie/{movieId}/average": {
+      "get": {
+        "summary": "Moyenne des notes d’un film",
+        "tags": [
+          "Ratings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "movieId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/ratings/series/{seriesId}/average": {
+      "get": {
+        "summary": "Moyenne des notes d’une série",
+        "tags": [
+          "Ratings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "seriesId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
