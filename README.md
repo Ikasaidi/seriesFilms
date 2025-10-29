@@ -16,7 +16,7 @@ API REST pour gérer **films**, **séries**, **saisons**, **épisodes**, **notes
 - [BasePath & Ports](#basepath--ports)
 - [Seed des données](#seed-des-données)
 - [Table des routes](#table-des-routes)
-- [Swagger`](#Documentation-API-(Swagger))
+- [Swagger](#Documentation-API-Swagger)
 - [Codes HTTP & erreurs](#codes-http--erreurs)
 - [Notes](#notes)
 
