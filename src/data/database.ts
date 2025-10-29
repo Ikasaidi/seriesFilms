@@ -11,6 +11,8 @@ export async function connectDB(): Promise<void> {
 
   // RÉCUPÉRATION DE L’URI
   const uri = config.get<string>("db.uri");
+  //DEBUG
+  console.log("Connection vers:",uri);
   if (!uri) throw new Error("URI MongoDB manquante");
 
   try {
