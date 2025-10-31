@@ -1,4 +1,5 @@
-import dotenv from "dotenv";  // Charge les variables d'environnement (.env)
+import "dotenv/config";
+import config from "config";  
 import { connectDB } from "./database";
 import {Movie} from "../V2/models/movie";
 import {Series} from "../V2/models/series";
@@ -10,7 +11,8 @@ import {User} from "../V2/models/user";
 // -----------------------------------------------------------
 // CONFIG .env
 // -----------------------------------------------------------
-dotenv.config();
+// Debug rapide : voir l'environnement courant
+console.log("Config chargée:", config.util.getEnv("NODE_ENV"));
 
 // -----------------------------------------------------------
 // FONCTION PRINCIPALE DE SEED

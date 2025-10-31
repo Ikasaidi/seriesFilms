@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "420-514-TP1 API v2",
+    "title": "420-514-TP2 API v2",
     "version": "2.0.0",
-    "description": "Documentation OpenAPI pour l’API Films & Séries."
+    "description": "Documentation pour l’API Films & Séries."
   },
   "servers": [
     {
