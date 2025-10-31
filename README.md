@@ -40,7 +40,7 @@ npm install
 Créer un fichier **.env** à la racine (exemple) :
 ```
 NODE_ENV=development
-MONGO_URI=mongodb://localhost:27017/Film
+MONGO_URI=mongodb://domaine/Film
 JWT_SECRET=change-me
 JWT_EXPIRES_IN=7d
 SSL_KEY_PATH=./cert/server.key
@@ -63,13 +63,11 @@ Clés importantes :
 {
   "start": "ts-node-dev --respawn src/V2/server.ts",
   "seed":  "ts-node src/data/seed.ts",
-  "test":  "echo \"Error: no test specified\" && exit 1"
 }
 ```
 
 - `npm start` : démarre l’API en **développement** (reload).
 - `npm run seed` : **vide** et **insère** des données d’exemple.
-- `npm test` : placeholder.
 
 ## Démarrage
 
@@ -77,7 +75,7 @@ Clés importantes :
 ```bash
 export NODE_ENV=development
 npm start
-# Serveur HTTP sur le port défini (souvent 3000)
+# Serveur HTTP sur le port défini (3000)
 ```
 
 ### Test
