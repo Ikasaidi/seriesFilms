@@ -39,6 +39,7 @@ export class MovieController {
         return res.status(400).json({ success: false, message: "ID manquant" });
       }
       const movie = await movieService.getMovieById(id);
+      logger.info(`Affichag du film ${id}`);
       res.status(200).json({ success: true, movie });
     } catch (err) {
       next(err);

@@ -9,7 +9,7 @@ import ms from "ms"; //pour typer correctement les durées
 
 // Secret + durée depuis variables d'env (ou config)
 const JWT_SECRET: Secret =
-  config.get<string>("security.jwt.secret") || process.env.JWT_SECRET || "dev-secret";
+  (config.get<string>("security.jwt.secret") || process.env.JWT_SECRET) as string ;
 
 const JWT_EXPIRES_IN =
   (config.get<string>("security.jwt.expiresIn") || process.env.JWT_EXPIRES_IN || "1h") as ms.StringValue;

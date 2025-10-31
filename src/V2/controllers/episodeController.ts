@@ -53,6 +53,8 @@ export class EpisodeController {
         return res.status(400).json({ success: false, message: "ID season manquant" });
       }
       const episodes = await episodeService.getEpisodes(seasonId, req.query);
+      
+      logger.info(`Affichage des épisodes`);
       res.status(200).json({ success: true, episodes });
     } catch (err) {
       next(err);

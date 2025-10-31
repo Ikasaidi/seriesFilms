@@ -5,7 +5,6 @@
 
 import bcrypt from "bcrypt";
 
-
 // -----------------------------------------------------------
 // HASHER un mot de passe en Bcrypt
 // - Entrée : mot de passe en clair
@@ -18,6 +17,7 @@ export const hashPassword = async (password: string): Promise<string> => {
 
   // On génère un sel + on hash
   const salt = await bcrypt.genSalt(SALT_ROUNDS);
+
   return bcrypt.hash(password, salt);
 };
 
@@ -29,5 +29,6 @@ export const comparePassword = async (
   plainPassword: string,
   hashedPassword: string
 ): Promise<boolean> => {
+
   return bcrypt.compare(plainPassword, hashedPassword);
 };

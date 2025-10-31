@@ -80,6 +80,7 @@ export class AuthController {
     }
 
     const user = await authService.promoteToAdmin(id);
+    logger.info(`Promotion réussie: ${id}`);
     res.status(200).json({ success: true, user });
   } catch (err) {
     next(err);
