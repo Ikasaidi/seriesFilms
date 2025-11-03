@@ -18,6 +18,7 @@ API REST pour gérer **films**, **séries**, **saisons**, **épisodes**, **notes
 - [Table des routes](#table-des-routes)
 - [Swagger](#Documentation-API-Swagger)
 - [Codes HTTP & erreurs](#codes-http--erreurs)
+- [Démo Postman](#démo-postman)
 - [Notes](#notes)
 
 ---
@@ -163,6 +164,10 @@ npm run seed
 - Client : **400** (paramètre manquant), **401** (non authentifié), **403** (non autorisé), **404** (introuvable), **422** (validation).
 - Serveur : **500** (erreur inattendue).
 ---
+
+## Démo Postman
+- Une vidéo mp4 du run de ma collection postman est dans le fichier /Postman
+
 
 ## Notes
 - Après un **seed**, les `_id` changent. Récupérez un ID via `GET /api/v2/...` avant de tester une route détaillée.
