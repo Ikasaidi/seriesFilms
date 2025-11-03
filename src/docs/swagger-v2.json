@@ -910,7 +910,7 @@
         }
       }
     },
-    "/ratings/movie/{movieId}/average": {
+    "/ratings/avg/movie/{movieId}": {
       "get": {
         "summary": "Moyenne des notes d’un film",
         "tags": [
@@ -933,7 +933,7 @@
         ]
       }
     },
-    "/ratings/series/{seriesId}/average": {
+    "/ratings/avg/series/{seriesId}": {
       "get": {
         "summary": "Moyenne des notes d’une série",
         "tags": [

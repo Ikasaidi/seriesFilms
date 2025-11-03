@@ -26,7 +26,7 @@ cert/*.csr
 cert/*.crt
 
 # Postman export
-postman/
+postman/*.json
 
 # Cache et données temporaires
 *.tsbuildinfo
